@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main() {
+    int bt1[3]={5,3,4}; // P0,P1,P4
+    int bt2[2]={2,6};   // P2,P3
+
+    int time=0;
+
+    printf("Queue 1 (FCFS):\n");
+    for(int i=0;i<3;i++) {
+        printf("P%d [%d-%d]\n", i, time, time+bt1[i]);
+        time+=bt1[i];
+    }
+
+    printf("Queue 2 (FCFS):\n");
+    for(int i=0;i<2;i++) {
+        printf("P%d [%d-%d]\n", i+2, time, time+bt2[i]);
+        time+=bt2[i];
+    }
+}
