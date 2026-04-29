@@ -1,0 +1,156 @@
+#include <stdio.h>
+
+#define MAX 20
+
+// Function to calculate results
+void calculate(int n, int at[], int bt[], int ct[], int tat[], int wt[]) {
+    float avg_tat = 0, avg_wt = 0;
+
+    printf("\nPID\tAT\tBT\tCT\tTAT\tWT\n");
+    for (int i = 0; i < n; i++) {
+        tat[i] = ct[i] - at[i];
+        wt[i] = tat[i] - bt[i];
+
+        avg_tat += tat[i];
+        avg_wt += wt[i];
+
+        printf("P%d\t%d\t%d\t%d\t%d\t%d\n",
+               i+1, at[i], bt[i], ct[i], tat[i], wt[i]);
+    }
+
+    printf("Average TAT = %.2f\n", avg_tat/n);
+    printf("Average WT = %.2f\n", avg_wt/n);
+}
+
+// FCFS
+void fcfs(int n, int at[], int bt[]) {
+    int ct[MAX];
+
+    ct[0] = at[0] + bt[0];
+
+    for (int i = 1; i < n; i++) {
+        if (ct[i-1] < at[i])
+            ct[i] = at[i] + bt[i];
+        else
+            ct[i] = ct[i-1] + bt[i];
+    }
+
+    printf("\n--- FCFS ---\n");
+    int tat[MAX], wt[MAX];
+    calculate(n, at, bt, ct, tat, wt);
+}
+
+// SJF (Non-preemptive)
+void sjf(int n, int at[], int bt[]) {
+    int completed[MAX] = {0}, ct[MAX];
+    int time = 0, done = 0;
+
+    while (done < n) {
+        int idx = -1, min = 9999;
+
+        for (int i = 0; i < n; i++) {
+            if (at[i] <= time && !completed[i] && bt[i] < min) {
+                min = bt[i];
+                idx = i;
+            }
+        }
+
+        if (idx != -1) {
+            ct[idx] = time + bt[idx];
+            time = ct[idx];
+            completed[idx] = 1;
+            done++;
+        } else time++;
+    }
+
+    printf("\n--- SJF ---\n");
+    int tat[MAX], wt[MAX];
+    calculate(n, at, bt, ct, tat, wt);
+}
+
+// SRTF (Preemptive)
+void srtf(int n, int at[], int bt[]) {
+    int rt[MAX], ct[MAX];
+    for (int i = 0; i < n; i++) rt[i] = bt[i];
+
+    int time = 0, completed = 0;
+
+    while (completed < n) {
+        int idx = -1, min = 9999;
+
+        for (int i = 0; i < n; i++) {
+            if (at[i] <= time && rt[i] > 0 && rt[i] < min) {
+                min = rt[i];
+                idx = i;
+            }
+        }
+
+        if (idx != -1) {
+            rt[idx]--;
+
+            if (rt[idx] == 0) {
+                ct[idx] = time + 1;
+                completed++;
+            }
+        }
+        time++;
+    }
+
+    printf("\n--- SRTF ---\n");
+    int tat[MAX], wt[MAX];
+    calculate(n, at, bt, ct, tat, wt);
+}
+
+// Priority (Non-preemptive)
+void priority(int n, int at[], int bt[], int pr[]) {
+    int completed[MAX] = {0}, ct[MAX];
+    int time = 0, done = 0;
+
+    while (done < n) {
+        int idx = -1, high = 9999;
+
+        for (int i = 0; i < n; i++) {
+            if (at[i] <= time && !completed[i] && pr[i] < high) {
+                high = pr[i];
+                idx = i;
+            }
+        }
+
+        if (idx != -1) {
+            ct[idx] = time + bt[idx];
+            time = ct[idx];
+            completed[idx] = 1;
+            done++;
+        } else time++;
+    }
+
+    printf("\n--- Priority Scheduling ---\n");
+    int tat[MAX], wt[MAX];
+    calculate(n, at, bt, ct, tat, wt);
+}
+
+int main() {
+    int n;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    int at[MAX], bt[MAX], pr[MAX];
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter AT and BT for P%d: ", i+1);
+        scanf("%d %d", &at[i], &bt[i]);
+    }
+
+    printf("\nEnter Priority (lower = higher priority):\n");
+    for (int i = 0; i < n; i++) {
+        printf("P%d: ", i+1);
+        scanf("%d", &pr[i]);
+    }
+
+    fcfs(n, at, bt);
+    sjf(n, at, bt);
+    srtf(n, at, bt);
+    priority(n, at, bt, pr);
+
+    return 0;
+}
