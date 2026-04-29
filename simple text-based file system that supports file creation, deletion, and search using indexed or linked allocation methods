@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <string.h>
+
+struct file {
+    char name[20];
+};
+
+struct file f[50];
+int count = 0;
+
+void create() {
+    printf("Enter file name: ");
+    scanf("%s", f[count].name);
+    count++;
+}
+
+void delete() {
+    char name[20];
+    printf("Enter file to delete: ");
+    scanf("%s", name);
+
+    for(int i=0;i<count;i++) {
+        if(strcmp(name,f[i].name)==0) {
+            for(int j=i;j<count-1;j++)
+                f[j]=f[j+1];
+            count--;
+            printf("Deleted\n");
+            return;
+        }
+    }
+    printf("File not found\n");
+}
+
+void search() {
+    char name[20];
+    printf("Enter file to search: ");
+    scanf("%s", name);
+
+    for(int i=0;i<count;i++) {
+        if(strcmp(name,f[i].name)==0) {
+            printf("File found\n");
+            return;
+        }
+    }
+    printf("Not found\n");
+}
+
+int main() {
+    int ch;
+    while(1) {
+        printf("\n1.Create 2.Delete 3.Search 4.Exit\n");
+        scanf("%d",&ch);
+
+        if(ch==1) create();
+        else if(ch==2) delete();
+        else if(ch==3) search();
+        else break;
+    }
+}
