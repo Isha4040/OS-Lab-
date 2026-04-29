@@ -1,0 +1,38 @@
+#include <stdio.h>
+
+int main() {
+    int bt[5] = {10,5,8,6,2};
+    int rt[5];
+
+    for(int i=0;i<5;i++) rt[i]=bt[i];
+
+    int tq1=4, tq2=8, time=0;
+
+    printf("Queue1 (RR tq=4):\n");
+    for(int i=0;i<5;i++) {
+        if(rt[i]>0) {
+            int exec = (rt[i]>tq1)?tq1:rt[i];
+            printf("P%d [%d-%d]\n",i,time,time+exec);
+            time+=exec;
+            rt[i]-=exec;
+        }
+    }
+
+    printf("Queue2 (RR tq=8):\n");
+    for(int i=0;i<5;i++) {
+        if(rt[i]>0) {
+            int exec = (rt[i]>tq2)?tq2:rt[i];
+            printf("P%d [%d-%d]\n",i,time,time+exec);
+            time+=exec;
+            rt[i]-=exec;
+        }
+    }
+
+    printf("Queue3 (FCFS):\n");
+    for(int i=0;i<5;i++) {
+        if(rt[i]>0) {
+            printf("P%d [%d-%d]\n",i,time,time+rt[i]);
+            time+=rt[i];
+        }
+    }
+}
