@@ -1,0 +1,16 @@
+#include <stdio.h>
+
+int main() {
+    char name[50];
+
+    printf("Enter your name: ");
+    scanf("%s", name);
+
+    printf("Hello, %s\n", name);
+
+    printf("\nCurrent Date: (Not supported here)\n");
+    printf("\nFiles in directory: (Not supported here)\n");
+    printf("\nCurrent Directory: (Not supported here)\n");
+
+    return 0;
+}
